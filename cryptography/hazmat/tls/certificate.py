@@ -14,9 +14,6 @@ class ClientCertificateStore(object):
     def get_certificate_chain_for_roots(self, roots,
                                         certificate_chain_callback):
         """
-        This method is intended to be implemented by the user, NOT called by
-        the user.
-
         Get the client certificate chain to send to the server, based on the
         roots specified by the server.
 
@@ -33,9 +30,6 @@ class ClientCertificateStore(object):
 
     def get_default_certificate_chain(self, certificate_chain_callback):
         """
-        This method is intended to be implemented by the user, NOT called by
-        the user.
-
         Get the default client certificate in the case that the server did not
         provide roots that the client certificate must chain to.
 
@@ -50,6 +44,9 @@ class TrustStore(object):
     """
     Create a store of trusted CA certificates to be used with ClientTLS. No
     methods are public.
+
+    If any private keys are found in any of the certificates,
+    `ExtraneousPrivateKeyError` will be raised.
     """
     def __init__(self, certificates):
         """
@@ -68,21 +65,8 @@ class ServerCertificates(metaclass=ABCMeta):
     def get_certificate_chain_for_server_name(self, server_name,
                                               certificate_chain_callback):
         """
-        This method is intended to be implemented by the user, NOT called by
-        the user.
-
         Get the server chain to send to the client when the client is using
         Server Name Indication (SNI).
-
-        Implement this method to invoke the certificate_chain_callback either
-        with a set of certificates that forms a single certificate chain, the
-        leaf of which MUST have a private key.
-
-        None may be passed to the certificate_chain_callback in case no
-        certificates can be found, in which case a TLS Alert will be sent.
-
-        Passing a "default" certificate chain that doesn't match the server
-        name is acceptable.
 
         @param server_name: The server name.
 
