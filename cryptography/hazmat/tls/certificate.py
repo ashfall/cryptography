@@ -100,3 +100,18 @@ class ServerCertificateChain(ServerCertificates):
         @param chain: A single chain of certificates, the leaf of which must
             have a private key.
         """
+
+
+class SNIServerCertificates(ServerCertificates):
+    """
+    Represents a SNI-capable set of certificates for use with ServerTLS.
+    """
+    def __init__(certificates, default)
+        """
+        @param certificates: A set of certificates that may contain multiple
+            distinct certificate chains. Any leaf certificates MUST have
+            private keys.
+
+        @param default: A single certificate chain, the leaf of which MUST have
+            a private key.
+        """
