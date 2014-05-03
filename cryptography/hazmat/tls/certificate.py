@@ -32,8 +32,8 @@ class ClientCertificateStore(object):
 
     def get_default_certificate_chain(certificate_chain_callback):
         """
-        This method is intended to be implemented by the user, NOT called by the
-        user.
+        This method is intended to be implemented by the user, NOT called by
+        the user.
 
         Get the default client certificate in the case that the server did not
         provide roots that the client certificate must chain to.
@@ -58,4 +58,32 @@ class TrustStore(object):
         """
 
 
+class ServerCertificates:       # ABC
+    """
+    An abstract base class representing the type of operations possible on a
+    collection of server certificates.
+    """
+    def get_certificate_chain_for_server_name(server_name,
+                                              certificate_chain_callback):
+        """
+        This method is intended to be implemented by the user, NOT called by
+        the user.
 
+        Get the server chain to send to the client when the client is using
+        Server Name Indication (SNI).
+
+        Implement this method to invoke the certificate_chain_callback either
+        with a set of certificates that forms a single certificate chain, the
+        leaf of which MUST have a private key.
+
+        None may be passed to the certificate_chain_callback in case no
+        certificates can be found, in which case a TLS Alert will be sent.
+
+        Passing a "default" certificate chain that doesn't match the server
+        name is acceptable.
+
+        @param server_name: The server name.
+
+        @param certificate_chain_callback: A callable of one argument that
+            must be eventually called by this method.
+        """
