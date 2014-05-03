@@ -1,17 +1,18 @@
-
+from abc import ABCMeta, abstractmethod
 
 
 # 'leaf' certificate is a certificate with CA: false
 
 class Certificate(object):
-    def get_asn1_bytes():
+    def get_asn1_bytes(self):
         """
         Get the ASN1-format bytes of the certificate.
         """
 
 
 class ClientCertificateStore(object):
-    def get_certificate_chain_for_roots(roots, certificate_chain_callback):
+    def get_certificate_chain_for_roots(self, roots,
+                                        certificate_chain_callback):
         """
         This method is intended to be implemented by the user, NOT called by
         the user.
@@ -30,7 +31,7 @@ class ClientCertificateStore(object):
             server.
         """
 
-    def get_default_certificate_chain(certificate_chain_callback):
+    def get_default_certificate_chain(self, certificate_chain_callback):
         """
         This method is intended to be implemented by the user, NOT called by
         the user.
@@ -50,7 +51,7 @@ class TrustStore(object):
     Create a store of trusted CA certificates to be used with ClientTLS. No
     methods are public.
     """
-    def __init__(certificates):
+    def __init__(self, certificates):
         """
         @param certificates: A set of Certificate objects, none of which may
             have private keys. If any private keys are found in any of the
@@ -58,12 +59,13 @@ class TrustStore(object):
         """
 
 
-class ServerCertificates:       # ABC
+class ServerCertificates(metaclass=ABCMeta):
     """
     An abstract base class representing the type of operations possible on a
     collection of server certificates.
     """
-    def get_certificate_chain_for_server_name(server_name,
+    @abstractmethod
+    def get_certificate_chain_for_server_name(self, server_name,
                                               certificate_chain_callback):
         """
         This method is intended to be implemented by the user, NOT called by
@@ -86,4 +88,15 @@ class ServerCertificates:       # ABC
 
         @param certificate_chain_callback: A callable of one argument that
             must be eventually called by this method.
+        """
+
+
+class ServerCertificateChain(ServerCertificates):
+    """
+    Specify the certificate chain that will be sent to all clients.
+    """
+    def __init__(chain):
+        """
+        @param chain: A single chain of certificates, the leaf of which must
+            have a private key.
         """
