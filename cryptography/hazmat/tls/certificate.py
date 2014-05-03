@@ -95,7 +95,7 @@ class ServerCertificateChain(ServerCertificates):
     """
     Specify the certificate chain that will be sent to all clients.
     """
-    def __init__(chain):
+    def __init__(self, chain):
         """
         @param chain: A single chain of certificates, the leaf of which must
             have a private key.
@@ -106,7 +106,7 @@ class SNIServerCertificates(ServerCertificates):
     """
     Represents a SNI-capable set of certificates for use with ServerTLS.
     """
-    def __init__(certificates, default)
+    def __init__(self, certificates, default):
         """
         @param certificates: A set of certificates that may contain multiple
             distinct certificate chains. Any leaf certificates MUST have
